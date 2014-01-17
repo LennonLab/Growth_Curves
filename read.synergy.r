@@ -3,8 +3,14 @@
 #                                                                              #
 #	Written by M. Muscarella                                                     #
 #                                                                              #
-#	Last update: 1/16/13                                                         #
+#	Last update: 1/17/13                                                         #
 #                                                                              #
+# Features:                                                                    #
+#   Reads in the datatable from the symergy mx machine                         #
+#   Selects only the matrix of plate data                                      #
+#   Converts time to minutes                                                   #
+#   Checks the type of all values & changes to numeric if needed               #
+#   Outputs data matric {Time, Temp, Well...                                   #                                         
 ################################################################################
 
 read.synergy <- function(input = " "){
