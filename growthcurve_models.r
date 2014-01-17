@@ -14,41 +14,43 @@
 
   require(reshape)
 
-growth.estimate <- function(input=" "){
+growth.estimate <- function(input=" ", intercept.guess=0.1){
+# Input = Raw txt output file from Synergy MX
+# Intercept.guess = initial guess of non-grid parameter for y intercept
 # Load Code Dependencies
-  require(pracma)
+  #require(pracma)
   source("read.synergy.r")
   source("curve_fit_fxs.R")
   source("grid.mle2.R") 
   data.in <- read.synergy(input)
-  data.in$Time <- strftime(strptime(data.in$Time, format="%H:%M:%S"),"%H:%M")
-  data.in[2:dim(data.in)[2]] <- as.numeric(unlist(data.in[2:dim(data.in)[2]]))
   temp.test <- lm(Temp ~ Time, data=data.in)  
-
-time<-dat[1]
+  p <- round(anova(temp.test)$'Pr(>F)'[1], 3)
+  if (p > 0.10) {} else {stop("Stop, check for temperature effects")}
+  samples <- colnames(data.in[3:dim(data.in)[2]])
+  # storing umax estimate comparisons
+  fx.comp<-matrix(NA,nrow=length(unique(r)),ncol=1+1+2+8)
+  colnames(fx.comp)<-c("model","top.mod","fit1","fit2","ci1 2.5 %","ci1 97.5 %",
+    "ci2 2.5 %","ci2 97.5 %","ciFI1 2.5 %","ciFI1 97.5 %","ciFI2 2.5 %",
+    "ciFI2 97.5 %")  
+  # initialize data storage
+  results<-matrix(NA,nrow=length(uids),ncol=13)
+  colnames(results)<-c("Curve","best.mod","b0","A","umax","L","dd","topt","z",
+    "umax.lw","umax.up","umax.lw.FI","umax.up.FI")
+  results<-as.data.frame(results)  
+  
+#### Stopping Point 1/17/14  
+  
+  }
+  
+   
+  get(paste("data.out$",samples[i], sep=""))
 
 #remove temperature column and remake dataframe
-dat2<-dat[,3:ncol(dat)]
-dat3<-data.frame(time,dat2)
-m1<-melt(dat3)
-colnames(m1)<-c("time","well","abs")
+
 r<-unique(m1$well)
 uids<-unique(r)
 
-# initial guesses of non-grid parameters
-intercept.guess<-0.1
 
-# storing umax estimate comparisons
-fx.comp<-matrix(NA,nrow=length(unique(r)),ncol=1+1+2+8)
-colnames(fx.comp)<-c("model","top.mod","fit1","fit2","ci1 2.5 %","ci1 97.5 %","ci2 2.5 %","ci2 97.5 %","ciFI1 2.5 %","ciFI1 97.5 %","ciFI2 2.5 %","ciFI2 97.5 %")
-head(fx.comp)
-
-# initialize data storage
-results<-matrix(NA,nrow=length(uids),ncol=13)
-colnames(results)<-c("Curve","best.mod","b0","A","umax","L","dd","topt","z","umax.lw","umax.up","umax.lw.FI","umax.up.FI")
-results<-as.data.frame(results)
-
-#head(results)
 
 # Shit gets real
 uids<-unique(r)
