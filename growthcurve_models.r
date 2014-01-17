@@ -1,25 +1,30 @@
 ################################################################################
 #                                                                              #
 #	Lennon Lab Growth Curve Analysis (with Synergy MX Plate Reader)              #
+#   Parameter Estimate Code                                                    #
 #                                                                              #
 ################################################################################
 #                                                                              #
-#	Written by: M. Larsen (2013/07/18)                                           #
-# Modified by: M. Muscarella                                                   #
+#	Written by: M. Muscarella                                                    #
+#   Based on growthcurve_code.R Written by: M. Larsen (2013/07/18)             #
 #                                                                              #
 #	Last update: 1/16/13                                                         #
 #                                                                              #
 ################################################################################
 
-# Code Dependencies
-require(reshape)
-require(pracma)
-source("read.synergy.r")
-source("curve_fit_fxs.R")
-source("grid.mle2.R")
+  require(reshape)
 
+growth.estimate <- function(input=" "){
+# Load Code Dependencies
+  require(pracma)
+  source("read.synergy.r")
+  source("curve_fit_fxs.R")
+  source("grid.mle2.R") 
+  data.in <- read.synergy(input)
+  data.in$Time <- strftime(strptime(data.in$Time, format="%H:%M:%S"),"%H:%M")
+  data.in[2:dim(data.in)[2]] <- as.numeric(unlist(data.in[2:dim(data.in)[2]]))
+  temp.test <- lm(Temp ~ Time, data=data.in)  
 
-dat<-read.csv("growthcurve_130412.txt",header=TRUE,sep="\t")
 time<-dat[1]
 
 #remove temperature column and remake dataframe
