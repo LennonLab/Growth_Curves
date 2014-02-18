@@ -12,85 +12,73 @@
 #                                                                              #
 ################################################################################
 
-  require(reshape)
+# input = "GrowthCurve_Example.txt"
 
 growth.estimate <- function(input=" ", intercept.guess=0.1){
 # Input = Raw txt output file from Synergy MX
 # Intercept.guess = initial guess of non-grid parameter for y intercept
 # Load Code Dependencies
-  #require(pracma)
   source("read.synergy.r")
   source("curve_fit_fxs.R")
-  source("grid.mle2.R") 
+  source("grid.mle2.R")
+  
+# Data Input 
   data.in <- read.synergy(input)
-  temp.test <- lm(Temp ~ Time, data=data.in)  
+  temp.test <- lm(round(Temp, 2) ~ Time, data=data.in)  
   p <- round(anova(temp.test)$'Pr(>F)'[1], 3)
-  if (p > 0.10) {} else {stop("Stop, check for temperature effects")}
+  temp.min <- min(data.in$Temp)
+  temp.max <- max(data.in$Temp)
+  temp.diff <- temp.max - temp.min
+  if (temp.diff < 2) {} else {stop("Stop, check for temperature effects")}
   samples <- colnames(data.in[3:dim(data.in)[2]])
-  # storing umax estimate comparisons
-  fx.comp<-matrix(NA,nrow=length(unique(r)),ncol=1+1+2+8)
+  
+# storing umax estimate comparisons
+  fx.comp<-matrix(NA,nrow=dim(data.in)[2],ncol=1+1+2+8)  # Why 1+1+2+8 ????
   colnames(fx.comp)<-c("model","top.mod","fit1","fit2","ci1 2.5 %","ci1 97.5 %",
     "ci2 2.5 %","ci2 97.5 %","ciFI1 2.5 %","ciFI1 97.5 %","ciFI2 2.5 %",
-    "ciFI2 97.5 %")  
-  # initialize data storage
-  results<-matrix(NA,nrow=length(uids),ncol=13)
+    "ciFI2 97.5 %") 
+     
+# initialize data storage
+  results<-matrix(NA,nrow=dim(data.in)[2],ncol=13)
   colnames(results)<-c("Curve","best.mod","b0","A","umax","L","dd","topt","z",
     "umax.lw","umax.up","umax.lw.FI","umax.up.FI")
   results<-as.data.frame(results)  
+  for(i in 3:dim(data.in)[2]){
   
-#### Stopping Point 1/17/14  
-  
-  }
-  
-   
-  get(paste("data.out$",samples[i], sep=""))
-
-#remove temperature column and remake dataframe
-
-r<-unique(m1$well)
-uids<-unique(r)
-
-
-
-# Shit gets real
-uids<-unique(r)
-i<-10
-for(i in 1:length(uids)){ 
-#for(i in 5:length(uids)){ 
-	print(paste(i/length(uids),"%"))	# status
-	# extract data
-	s<-uids[i]
-	print(s)
-	dat4a<-hampel(m1$abs[m1$well==s],5,t0=1)
-	dat4<-dat4a$y
-
-	time2<-m1$time[m1$well==s]
-	time2<-as.numeric(seq(1:73))
-	tmpdata<-data.frame(dat4,time2,s)	
-	plot(dat4~time2, ylim=c(0,max(tmpdata[,1])+0.2),main=s[1],ylab="ABS",xlab="Time", pch=19,data=tmpdata)
-		#A=0.8
-		#L=20
-		#umax=0.05
-		#curve(A*exp(-exp(umax*exp(1)/A*(L-x)+1)),1,72,add=T,col="blue")
-
-# Check for flat oxymoronic curves (?)
-if(diff(range(tmpdata$dat4))>0.05){
-	# set grid and start lists for each model
-	# constant model, dat~dnorm(mean=b0,sd=exp(z))
+# Print Operation Status
+    print(paste(round(((i-2)/(dim(data.in)[2]-2)*100),2),"% complete", sep = ""), quote=F)
+    
+# Extract Data
+    t <- data.in$Time
+    s <- data.in[,i]
+    
+# Smoothing Function
+    s.2 <- filter(s, rep(1/11,11), circular=F, sides=2)
+    s.2[1:5] <- s[1:5]
+    s.max <- max(which(s.2 == max(s.2, na.rm=T)))
+    t.end <- round(t[s.max],0) + 5
+    t.trim <- t[which(t <= t.end)]
+    s.trim <- s.2[which(t <= t.end)]
+    tmpdata <- data.frame(t.trim, s.trim)
+    plot(s.trim ~ t.trim, main=colnames(data.in[i]), ylab="ABS", xlab="Time", pch=19, data=tmpdata)
+    
+# Set Grid and Start Lists for Each Model
+	# Constant Model, dat~dnorm(mean=b0,sd=exp(z))
 	grids0<-list()
 	start0<-list(b0=intercept.guess,z=-1)
-	# old modified gompertz, dat~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z))
+	# Old Modified Gompertz, dat~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z))
 	grids1<-list(umax=c(0.05,0.1,1),L=c(10,20),z=c(-0.5,-2))
 	start1<-list(b0=intercept.guess,A=max(tmpdata[,1]),umax=NA,L=NA,z=NA)
-	# new gompertz, dat~dnorm(mean=new.gomp(time2,c(b0,A,umax,L,dd,topt)),sd=exp(z))
+	# New Gompertz, dat~dnorm(mean=new.gomp(time2,c(b0,A,umax,L,dd,topt)),sd=exp(z))
 	grids2<-list(umax=c(0.05,0.1,1),L=c(10,20),dd=c(0.01,0.1,1),topt=c(20,50),z=c(-0.5,-2))
 	start2<-list(b0=intercept.guess,A=log(max(tmpdata[,1])),umax=NA,L=NA,dd=NA,topt=NA,z=NA)
-	# grid.mle2 fits performed
-	fit0<-grid.mle2(minuslogl=dat4~dnorm(mean=b0,sd=exp(z)),grids=grids0,start=start0,data=tmpdata)
+	
+# Perform grid.mle2 Fits
+	fit0<-grid.mle2(minuslogl=s.trim~dnorm(mean=b0,sd=exp(z)),grids=grids0,start=start0,data=tmpdata)
   print("finished fit0")
-	fit1<-grid.mle2(minuslogl=dat4~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z)),grids=grids1,start=start1,data=tmpdata,method="BFGS")
+	fit1<-grid.mle2(minuslogl=s.trim~dnorm(mean=m.gomp(t.trim,c(b0,A,umax,L)),sd=exp(z)),grids=grids1,start=start1,data=tmpdata,method="BFGS")
   print("finished fit1")
-	fit2<-grid.mle2(minuslogl=dat4~dnorm(mean=new.gomp(time2,c(b0,A,umax,L,dd,topt)),sd=exp(z)),grids=grids2,start=start2,data=tmpdata, method="BFGS")
+	fit2<-grid.mle2(minuslogl=s.trim~dnorm(mean=new.gomp(t.trim,c(b0,A,umax,L,dd,topt)),sd=exp(z)),grids=grids2,start=start2,data=tmpdata, method="BFGS")
   print("finished fit2")	
 
 	# isolate best of each class of models
@@ -110,9 +98,9 @@ if(diff(range(tmpdata$dat4))>0.05){
 	pdf(file=paste("./newplots2/testplot",s,".pdf",sep=""))
 	plot(dat4~time2, ylim=c(0,max(tmpdata[,1])+0.2),main=s[1],ylab="ABS",xlab="Time", pch=19,data=tmpdata)
 	# update plot with curves
-	curve(coef(best.f0)[[1]]+0*x,0,max(tmpdata$time2),col='black',add=T)
-	curve(m.gomp(x,coef(best.f1)[1:4]),0,max(tmpdata$time2),col='blue',add=T)
-	curve(new.gomp(x,coef(best.f2)[1:6]),0,max(tmpdata$time2),col='red',add=T)
+	curve(coef(best.f0)[[1]]+0*x,0,max(tmpdata$t.trim),col='black',add=T)
+	curve(m.gomp(x,coef(best.f1)[1:4]),0,max(tmpdata$t.trim),col='blue',add=T)
+	curve(new.gomp(x,coef(best.f2)[1:6]),0,max(tmpdata$t.trim),col='red',add=T)
 	dev.off()
 
 	# CI's for the umax term? (for method comparison)
