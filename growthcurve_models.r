@@ -14,6 +14,10 @@
 
 # input = "GrowthCurve_Example.txt"
 
+# This function is currently not working. It is supposed to compare different 
+# models but things are complicated. I recommend using the second function for 
+# now.
+
 growth.estimate <- function(input=" ", intercept.guess=0.1){
 # Input = Raw txt output file from Synergy MX
 # Intercept.guess = initial guess of non-grid parameter for y intercept
@@ -240,6 +244,8 @@ growth.modGomp <- function(input=" ", intercept.guess=0.1){
   }}
 
 ### 2/19/14 Stopping Point: Added modGomp only function. Edited plotting and grids
+### The next step is going to be working on stats for curve fits and summary stats
+### as well as outputting curve parameters. But good so far.
 
 	# attempt profiling
 	pf1<-profile(best.f1)
