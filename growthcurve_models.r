@@ -37,13 +37,13 @@ growth.estimate <- function(input=" ", intercept.guess=0.1){
   samples <- colnames(data.in[3:dim(data.in)[2]])
   
 # storing umax estimate comparisons
-  fx.comp<-matrix(NA,nrow=(dim(data.in)[2])-2,ncol=1+1+2+8)  # Why 1+1+2+8 ????
+  fx.comp <- matrix(NA,nrow=(dim(data.in)[2])-2,ncol=1+1+2+8)  # Why 1+1+2+8 ????
   colnames(fx.comp)<-c("model","top.mod","fit1","fit2","ci1 2.5 %","ci1 97.5 %",
     "ci2 2.5 %","ci2 97.5 %","ciFI1 2.5 %","ciFI1 97.5 %","ciFI2 2.5 %",
     "ciFI2 97.5 %") 
      
 # initialize data storage
-  results<-matrix(NA,nrow=(dim(data.in)[2])-2,ncol=13)
+  results <- matrix(NA,nrow=(dim(data.in)[2])-2,ncol=13)
   colnames(results)<-c("Curve","best.mod","b0","A","umax","L","dd","topt","z",
     "umax.lw","umax.up","umax.lw.FI","umax.up.FI")
   results<-as.data.frame(results)  
@@ -157,16 +157,17 @@ growth.estimate <- function(input=" ", intercept.guess=0.1){
         if(ind==2){
           results[i,c("umax.lw","umax.up","umax.lw.FI","umax.up.FI")]<-c(ci1,ciFI1)				
         }}
-  }else{
-    # generate plot of model fits
-    pdf(file=paste("./newplots2/testplot",s,".pdf",sep=""))
-    plot(s.trim ~ t.trim, main=colnames(data.in[i]), ylab="ABS", xlab="Time", pch=19, data=tmpdata)
-    dev.off()
-    results$Curve[i]<-s
-    results$best.mod[i]<-0
-  }}
-results1<-results
-write.csv(results,"results.csv")
+#  } else {
+#    # generate plot of model fits
+#    pdf(file=paste("./newplots2/testplot",s,".pdf",sep=""))
+#    plot(s.trim ~ t.trim, main=colnames(data.in[i]), ylab="ABS", xlab="Time", pch=19, data=tmpdata)
+#    dev.off()
+#    results$Curve[i]<-s
+#    results$best.mod[i]<-0
+  }
+  results1<-results
+  write.csv(results,"results.csv")
+  }
 
 ################################################################################
 ################################################################################
@@ -188,30 +189,23 @@ growth.modGomp <- function(input=" ", intercept.guess=0.1){
   temp.diff <- temp.max - temp.min
   if (temp.diff < 2) {} else {stop("Stop, check for temperature effects")}
   samples <- colnames(data.in[3:dim(data.in)[2]])
-  
-# storing umax estimate comparisons
-#  fx.comp<-matrix(NA,nrow=(dim(data.in)[2])-2,ncol=1+1+2+8)  # Why 1+1+2+8 ????
-#  colnames(fx.comp)<-c("model","top.mod","fit1","fit2","ci1 2.5 %","ci1 97.5 %",
-#    "ci2 2.5 %","ci2 97.5 %","ciFI1 2.5 %","ciFI1 97.5 %","ciFI2 2.5 %",
-#    "ciFI2 97.5 %") 
      
-# initialize data storage
-#  results<-matrix(NA,nrow=(dim(data.in)[2])-2,ncol=13)
-#  colnames(results)<-c("Curve","b0","A","umax","L","z",
-#    "umax.lw","umax.up","umax.lw.FI","umax.up.FI")
-#  results<-as.data.frame(results)  
+# Initialize Data Storage
+  results <- matrix(NA,nrow=(dim(data.in)[2])-2,ncol=10)
+  colnames(results) < -c("Curve","b0","A","umax","L","z",
+    "umax.lw","umax.up","umax.lw.FI","umax.up.FI")
+  results <- as.data.frame(results)  
   
   for(i in 3:dim(data.in)[2]){
-  
-# Print Operation Status
+    # Print Operation Status
     print(paste(round(((i-2)/(dim(data.in)[2]-2)*100),2),"% complete", sep = ""), quote=F)
     
-# Extract Data
+    # Extract Data
     t <- data.in$Time
     s <- data.in[,i]
     realdata <- data.frame(t,s)
     
-# Smoothing Function
+    # Smoothing Function
     s.2 <- as.numeric(filter(s, rep(1/11,11), circular=F, sides=2))
     s.2[1:5] <- s[1:5]
     s.2[(length(s.2)-5):length(s.2)] <- s[(length(s)-5):length(s)]
@@ -222,12 +216,12 @@ growth.modGomp <- function(input=" ", intercept.guess=0.1){
     tmpdata <- data.frame(t.trim, s.trim)
     #plot(s.trim ~ t.trim, main=colnames(data.in[i]), ylab="ABS", xlab="Time", pch=19, data=tmpdata)
     
-# Set Grid and Start Lists for Model
-	# Modified Gompertz, dat~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z))
+  # Set Grid and Start Lists for Model
+	 # Modified Gompertz, dat~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z))
 	 grids1<-list(umax=c(0.05,0.1,1),L=c(-5,-0.5,0.1,5,10,20),z=c(-0.5,-2))
 	 start1<-list(b0=intercept.guess,A=max(tmpdata[,2]),umax=NA,L=NA,z=NA)
 
-# Perform grid.mle2 Fits
+  # Perform grid.mle2 Fits
     fit1<-grid.mle2(minuslogl=s.trim~dnorm(mean=m.gomp(t.trim,c(b0,A,umax,L)),sd=exp(z)),grids=grids1,start=start1,data=tmpdata,method="BFGS")
     print("finished fit")	
 
@@ -241,7 +235,6 @@ growth.modGomp <- function(input=" ", intercept.guess=0.1){
     plot(s ~ t, main=colnames(data.in[i]), ylab="ABS", xlab="Time", pch=19, data=realdata)
     curve(m.gomp(x,coef(best.f1)[1:4]),0,max(tmpdata$t.trim),col='blue',lwd=2,add=T)
     dev.off()
-  }}
 
 ### 2/19/14 Stopping Point: Added modGomp only function. Edited plotting and grids
 ### The next step is going to be working on stats for curve fits and summary stats
