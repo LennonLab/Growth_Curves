@@ -13,9 +13,9 @@
 ################################################################################
 
 # Load Dependencies
-source("growthcurve_models.r")
+source("modified_Gomp.r")
 # Create Directory For Output
-dir.create("./plot.out", showWarnings = FALSE)
+dir.create("./output", showWarnings = FALSE)
 
 # Run Example
-growth.modGomp("GrowthCurve_Example.txt")
+growth.modGomp("GrowthCurve_Example.txt", "test")
