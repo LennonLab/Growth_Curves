@@ -18,7 +18,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, synergy=T
 # synergy=T --> the data comes from the synergy mx machine. 
 #   If false data should be deliminated in proper format
 # Load Code Dependencies
-  source("./scripts/read.synergy.r")
+  source("./scripts/read.synergy.R")
   source("./scripts/curve_fit_fxs.R")
   source("./scripts/grid.mle2.R")
   

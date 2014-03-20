@@ -23,7 +23,7 @@ growth.estimate <- function(input=" ", intercept.guess=0.1){
 # Input = Raw txt output file from Synergy MX
 # Intercept.guess = initial guess of non-grid parameter for y intercept
 # Load Code Dependencies
-  source("./scripts/read.synergy.r")
+  source("./scripts/read.synergy.R")
   source("./scripts/curve_fit_fxs.R")
   source("./scripts/grid.mle2.R")
   
