@@ -13,7 +13,7 @@
 ################################################################################
 
 # Load Dependencies
-source("modified_Gomp.r")
+source("./scripts/modified_Gomp.r")
 # Create Directory For Output
 dir.create("./output", showWarnings = FALSE)
 
