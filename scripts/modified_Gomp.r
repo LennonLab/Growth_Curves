@@ -13,18 +13,18 @@
 ################################################################################
 
 growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, 
-  synergy=T){
+  synergy=T , start = " "){
 # Input = Raw txt output file from Synergy MX
 # Intercept.guess = initial guess of non-grid parameter for y intercept '
 # synergy=T --> the data comes from the synergy mx machine. 
 #   If false data should be deliminated in proper format
 # Load Code Dependencies
-  source("./scripts/read.synergy.R")
-  source("./scripts/curve_fit_fxs.R")
-  source("./scripts/grid.mle2.R")
+  source("../scripts/read.synergy.R")
+  source("../scripts/curve_fit_fxs.R")
+  source("../scripts/grid.mle2.R")
   
 # Data Input 
-  data.in <- read.synergy(input)
+  data.in <- read.synergy(input, start)
   temp.test <- lm(round(Temp, 2) ~ Time, data=data.in)  
   p <- round(anova(temp.test)$'Pr(>F)'[1], 3)
   temp.min <- min(data.in$Temp)
@@ -40,7 +40,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
   results <- as.data.frame(results)
   
   # Creat Output
-  outfile <- paste("./output/",output,".txt", sep="")
+  outfile <- paste("../output/",output,".txt", sep="")
   titles <- c("Curve","b0","A","umax","L","z", "umax.lw","umax.up","umax.lw.FI","umax.up.FI")
   write.table(as.matrix(t(titles)), file=outfile, append=T, row.names=F, col.names=F, sep=",", quote=FALSE)  
   
@@ -79,7 +79,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
 	# generate plot of model fits
     plot(s ~ t, main=colnames(data.in[i]), ylab="ABS", xlab="Time", pch=19, data=realdata)
     curve(m.gomp(x,coef(best.f1)[1:4]),0,max(realdata$t),col='blue',lwd=2,add=T)
-    pdf(file=paste("./output/testplot",colnames(data.in[i]),".pdf",sep=""))
+    pdf(file=paste("../output/testplot",colnames(data.in[i]),".pdf",sep=""))
     plot(s ~ t, main=colnames(data.in[i]), ylab="ABS", xlab="Time", pch=19, data=realdata)
     curve(m.gomp(x,coef(best.f1)[1:4]),0,max(tmpdata$t.trim),col='blue',lwd=2,add=T)
     dev.off()
