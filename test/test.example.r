@@ -6,9 +6,13 @@
 ################################################################################
 #                                                                              #
 #	Written by: M. Muscarella                                                    #
-#	  Last update: 2/19/14                                                       #
+#	  Last update: 3/27/14                                                       #
 #                                                                              #
 ################################################################################
+
+# Setup Work Environment
+rm(list=ls())
+setwd('~/GitHub/growth-curves/test/')
 
 # Load Dependencies
 source("../scripts/modified_Gomp.r")
@@ -16,4 +20,4 @@ source("../scripts/modified_Gomp.r")
 dir.create("../output", showWarnings = FALSE)
 
 # Run Example
-growth.modGomp("../data/GrowthCurve_Example.txt", "test")
+growth.modGomp("../test/GrowthCurve_test.txt", "test", start = 51)
