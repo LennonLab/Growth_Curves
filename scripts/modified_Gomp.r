@@ -8,11 +8,12 @@
 #	Written by: M. Muscarella                                                    #
 #   Based on growthcurve_code.R Written by: M. Larsen (2013/07/18)             #
 #                                                                              #
-#	Last update: 3/3/14                                                         #
+#	Last update: 3/3/14                                                          #
 #                                                                              #
 ################################################################################
 
-growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, synergy=T){
+growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, 
+  synergy=T){
 # Input = Raw txt output file from Synergy MX
 # Intercept.guess = initial guess of non-grid parameter for y intercept '
 # synergy=T --> the data comes from the synergy mx machine. 
