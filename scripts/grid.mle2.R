@@ -55,7 +55,7 @@ grid.mle2<-function(minuslogl,grids,start,data,...){
       #res.fit<-mle2(minuslogl=minuslogl,start=new.start,data=data,...)	
 			pscale<-as.numeric(new.start)
 			names(pscale)<-names(new.start)
-			res.fit<-mle2(minuslogl=minuslogl,start=new.start,control=list(parscale=pscale),data=data,...)	
+			res.fit<-mle2(minuslogl=minuslogl,start=new.start,control=list(parscale=pscale, maxit=1000),data=data,...)	
 			res.mat[i,]<-c(coef(res.fit),AIC(res.fit))		
 			res.mod[[i]]<-res.fit
 		  }
@@ -64,7 +64,7 @@ grid.mle2<-function(minuslogl,grids,start,data,...){
 		  res.mod<-list()
 		  pscale<-as.numeric(start)
 		  names(pscale)<-names(start)
-		  res.fit<-mle2(minuslogl=minuslogl,start=start,control=list(parscale=pscale),data=data,...)	
+		  res.fit<-mle2(minuslogl=minuslogl,start=start,control=list(parscale=pscale, maxit=1000),data=data,...)	
 	   	res.mat<-c(coef(res.fit),AIC(res.fit))		
 		  res.mod[[1]]<-res.fit
 		  names(res.mat)<-c(names(coef(res.fit)),"AIC")
