@@ -13,7 +13,7 @@
 ################################################################################
 
 growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, 
-  synergy=T , smooth=F, start = " "){
+  synergy=T , smooth=F, start = " ", t.cut = "2"){
 # Input = Raw txt output file from Synergy MX
 # Intercept.guess = initial guess of non-grid parameter for y intercept '
 # synergy=T --> the data comes from the synergy mx machine. 
@@ -68,7 +68,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
     tmpdata <- data.frame(t, s)
     } else {
     s.max <- max(which(s == max(s, na.rm=T)))
-    t.end <- round(t[s.max],0) + 2
+    t.end <- round(t[s.max],0) + t.cut
     t <- t[which(t <= t.end)]
     s <- s[which(t <= t.end)]    
     tmpdata <- data.frame(t,s)}
