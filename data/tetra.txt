@@ -1,0 +1,37 @@
+Well	Treatment
+A3	White(nb) & TT
+A4	White(nb)
+A5	White & TT
+A6	White
+A7	TT CTL
+A8	PBS
+B3	White(nb) & TT
+B4	White(nb)
+B5	White & TT
+B6	White
+B7	TT CTL
+B8	PBS
+C3	White(nb) & TT
+C4	White(nb)
+C5	White & TT
+C6	White
+C7	TT CTL
+C8	PBS
+D3	White(nb) & TT
+D4	White(nb)
+D5	White & TT
+D6	White
+D7	TT CTL
+D8	PBS
+E3	White(nb) & TT
+E4	White(nb)
+E5	White & TT
+E6	White
+E7	TT CTL
+E8	PBS
+F3	White(nb) & TT
+F4	White(nb)
+F5	White & TT
+F6	White
+F7	TT CTL
+F8	PBS
