@@ -12,7 +12,7 @@
 
 # Setup Work Environment
 rm(list=ls())
-setwd('~/GitHub/growth-curves/test/')
+setwd('~/GitHub/Growth_Curves/test/')
 
 # Load Dependencies
 source("../bin/modified_Gomp.r")
