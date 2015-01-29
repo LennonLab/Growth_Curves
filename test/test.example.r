@@ -12,7 +12,7 @@
 
 # Setup Work Environment
 rm(list=ls())
-setwd('~/GitHub/growth-curves/test/')
+setwd('~/GitHub/Growth_Curves/test/')
 
 # Load Dependencies
 source("../bin/modified_Gomp.r")
@@ -20,4 +20,6 @@ source("../bin/modified_Gomp.r")
 dir.create("../output", showWarnings = FALSE)
 
 # Run Example
-growth.modGomp("../data/GrowthCurve_Example.txt", "test", skip=32)
+growth.modGomp("../data/GrowthCurve_Example.txt", "test", skip=31)
+growth.modGomp("../data/GrowthCurve_Example2.txt", "test", skip=48)
+growth.modGomp("../data/RPF.txt", "RPF", skip = 39)

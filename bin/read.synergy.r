@@ -16,7 +16,7 @@
 read.synergy <- function(input = " ", skip = ""){
   data.in <- read.delim(input, skip=skip, header=T, as.is=T)
   results.start <- which(data.in == "Results")
-  data.out <- data.in[1:(results.start - 1),]
+  data.out <- data.in[1:(results.start - 2),]
   colnames(data.out)[2] <- "Temp"
   t.h <- as.numeric(lapply(strsplit(data.out$Time, "\\:"), "[", 1))
   t.m <- as.numeric(lapply(strsplit(data.out$Time, "\\:"), "[", 2))
