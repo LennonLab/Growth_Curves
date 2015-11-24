@@ -15,7 +15,7 @@ rm(list=ls())
 setwd("~/GitHub/Growth_Curves/test")
 
 # Load Dependencies
-source("../bin/modified_Gomp.r")
+source("../bin/modified_Gomp.R")
 # Create Directory For Output
 dir.create("../output", showWarnings = FALSE)
 
