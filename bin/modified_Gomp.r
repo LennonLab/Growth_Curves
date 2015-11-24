@@ -57,7 +57,6 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
               col.names=F, sep=",", quote=FALSE)
 
   for(i in 1:length(samples)){
-
     # Print Operation Status
     print(paste("Starting sample ", samples[i], sep = ""), quote=F)
 
