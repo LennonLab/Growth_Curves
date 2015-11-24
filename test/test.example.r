@@ -14,6 +14,8 @@
 rm(list=ls())
 setwd('~/GitHub/Growth_Curves/test/')
 
+ControlRpfData = read.csv("ControlRpf.csv")
+
 # Load Dependencies
 source("../bin/modified_Gomp.r")
 # Create Directory For Output
@@ -23,3 +25,4 @@ dir.create("../output", showWarnings = FALSE)
 growth.modGomp("../data/GrowthCurve_Example.txt", "test", skip=31)
 growth.modGomp("../data/GrowthCurve_Example2.txt", "test", skip=48)
 growth.modGomp("../data/RPF.txt", "RPF", skip = 39)
+growth.modGomp("ControlRpf.csv")

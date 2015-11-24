@@ -23,14 +23,14 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, synergy=T
   source("../bin/grid.mle2.R")
 
 # Data Input
-  data.in <- read.synergy(input, skip = skip)
-  temp.test <- lm(round(Temp, 2) ~ Time, data=data.in)
-  p <- round(anova(temp.test)$'Pr(>F)'[1], 3)
-  temp.min <- min(data.in$Temp)
-  temp.max <- max(data.in$Temp)
-  temp.diff <- temp.max - temp.min
-  if (temp.diff < 3) {} else {stop("Stop, check for temperature effects")}
-  samples <- colnames(data.in[3:dim(data.in)[2]])
+  data.in = read.csv("ControlRpf.csv")
+  #temp.test <- lm(round(Temp, 2) ~ Time, data=data.in)
+  #p <- round(anova(temp.test)$'Pr(>F)'[1], 3)
+  #temp.min <- min(data.in$Temp)
+  #temp.max <- max(data.in$Temp)
+  #temp.diff <- temp.max - temp.min
+  #if (temp.diff < 3) {} else {stop("Stop, check for temperature effects")}
+  #samples <- colnames(data.in[3:dim(data.in)[2]])
 
   # Initialize Data Storage
   results <- matrix(NA,nrow=(dim(data.in)[2])-2,ncol=10)
@@ -50,7 +50,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, synergy=T
     # Extract Data
     t <- data.in$Time
     s <- data.in[,i]
-    if (max(s) - min(s) < 0.1) next
+    if (max(s) - min(s) < 0.05) next
     else realdata <- data.frame(t,s)
 
     # Smoothing Function
@@ -92,7 +92,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, synergy=T
     ci1<-confint(pf1)['umax',]
   	} else {
       ci1<-c(NA,NA)
-		  names(ci1)<-c("2.5 %","97.5 %")
+		  names(ci1)<-c("2.5%","97.5%")
       }
     ciFI1<-confint.FI(best.f1)['umax',]
 
@@ -104,7 +104,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1, synergy=T
     results$umax[i]<-cfs['umax']
     results$L[i]<-cfs['L']
     results$z[i]<-cfs['z']
-    results[i,c("umax.lw","umax.up","umax.lw.FI","umax.up.FI")] <-c (ci1,ciFI1)
+    results[i,c("umax.lw" , "umax.up" , "umax.lw.FI" , "umax.up.FI")] <-c (ci1,ciFI1)
     write.table(results[i,], file=outfile, append=T, row.names=F, col.names=F, sep=",", quote=FALSE)
     }
   results1<-results
