@@ -16,15 +16,18 @@ The code uses grid searching maximum likelihood estimation to fit the model.
 ## Repo Contents
 
 * **bin**
+
 		* *modified_Gomp.R*: function for analysis pipeline
 		* *read.synergy.R*: contains code for parsing raw data from synergy MX
 		* *grid.mle2.R*: contains code to grid search maximum likelihood
 		* *curve_fit_fxs.R*: contains the growth model equations		
 
 * **data**
+
 		* Various raw data examples
 
 * **test**
+
 		* *test.example.R*: A script with example code
 
 
