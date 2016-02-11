@@ -18,6 +18,7 @@ read.synergy <- function(input = " ", skip = ""){
   results.start <- which(data.in == "Results")
   data.out <- data.in[1:(results.start - 2),]
   colnames(data.out)[2] <- "Temp"
+  data.out$Time <- as.character(data.out$Time)
   t.h <- as.numeric(lapply(strsplit(data.out$Time, "\\:"), "[", 1))
   t.m <- as.numeric(lapply(strsplit(data.out$Time, "\\:"), "[", 2))
   data.out$Time <- round(t.h + t.m/60, 2)
