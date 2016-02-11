@@ -53,7 +53,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
   outfile <- paste("../output/",output,".txt", sep="")
   titles <- c("Curve","b0","A","umax","L","z", "umax.lw","umax.up",
               "umax.lw.FI","umax.up.FI")
-  write.table(as.matrix(t(titles)), file=outfile, append=T, row.names=F,
+  write.table(as.matrix(t(titles)), file=outfile, append=F, row.names=F,
               col.names=F, sep=",", quote=FALSE)
 
   for(i in 1:length(samples)){
@@ -100,7 +100,11 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
     plot(s ~ t, main=samples[i], ylab="ABS", xlab="Time", pch=19, data=realdata)
     curve(m.gomp(x,coef(best.f1)[1:4]),0,max(realdata$t),col='blue',lwd=2,add=T)
     pdf(file=paste("../output/testplot",samples[i],".pdf",sep=""))
-    plot(s ~ t, main=samples[i], ylab="ABS", xlab="Time", pch=19, data=realdata)
+    par(mar = c(6, 6, 4, 2))
+    plot(s ~ t, main=samples[i], 
+         ylab=expression(paste("Absorbance"[600])), 
+         xlab=expression(paste("Time (hrs)")), 
+         pch=19, las = 1, cex.axis = 1, cex.lab = 1.5, data=realdata)
     curve(m.gomp(x,coef(best.f1)[1:4]),0,max(tmpdata$t.trim),col='blue',lwd=2,add=T)
     dev.off()
 
@@ -118,19 +122,20 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
 
     # Save coefficients of model
     cfs<-coef(best.f1)
-    results$Curve[i] <- colnames(data.in)[i]
-    results$b0[i]<-cfs['b0']
-    results$A[i]<-cfs['A']
-    results$umax[i]<-cfs['umax']
-    results$L[i]<-cfs['L']
-    results$z[i]<-cfs['z']
-    results[i,c("umax.lw" , "umax.up" , "umax.lw.FI" , "umax.up.FI")] <-c (ci1,ciFI1)
+    results$Curve[i] <- samples[i]
+    results$b0[i]<-round(cfs['b0'], 4)
+    results$A[i]<-round(cfs['A'], 4)
+    results$umax[i]<-round(cfs['umax'], 4)
+    results$L[i]<-round(cfs['L'], 4)
+    results$z[i]<-round(cfs['z'], 4)
+    results[i,c("umax.lw" , "umax.up" , "umax.lw.FI" , "umax.up.FI")] <- round(c(ci1,ciFI1), 4)
     write.table(results[i,], file=outfile, append=T, row.names=F, col.names=F, sep=",", quote=FALSE)
 
     # Print Operation Status
+    print(paste("umax for ", samples[i], " = ", results$umax[i], sep = ""), quote = F)
     print(paste(round(((i)/(length(samples))*100),0),"% complete",
                 sep = ""), quote=F)
     }
-  results1<-results
-  write.csv(results,"results.csv")
+  # results1<-results
+  # write.csv(results,"results.csv")
 }
