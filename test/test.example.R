@@ -24,6 +24,9 @@ dir.create("../output", showWarnings = FALSE)
 growth.modGomp("../data/GrowthCurve_Example.txt", "test", skip=31)
 growth.modGomp("../data/GrowthCurve_Example2.txt", "test", skip=48)
 growth.modGomp("../data/RPF.txt", "RPF", skip = 39)
+growth.modGomp("../test/125_1_6_GrowthCurves.txt", "BehriTest", skip = 38)
 
 # Run Example (CSV file)
 growth.modGomp("../data/ControlRpf.csv", "csv_test", synergy=F, temp=F)
+
+
