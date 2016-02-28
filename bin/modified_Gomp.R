@@ -8,12 +8,13 @@
 #	Written by: M. Muscarella                                                    #
 #   Based on growthcurve_code.R Written by: M. Larsen (2013/07/18)             #
 #                                                                              #
-#	Last update: 11/24/2015 by V. Kuo and M. Muscarella                          #
+#	Last update: 02/27/2016 by V. Kuo and M. Muscarella                          #
 #                                                                              #
 ################################################################################
 
-growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
-                           delta = 0.05, synergy=T, temp = T, skip = ""){
+growth.modGomp <- function(input=" ", output=" ", 
+                           intercept.guess=0.1,delta = 0.05,
+                           synergy=T, temp = T, smooth = T, skip = ""){
     # Input = Raw txt output file from Synergy MX
     # Intercept.guess = initial guess of non-grid parameter for y intercept
     # delta = minimum change in OD required for analysis
@@ -73,6 +74,7 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
     }
 
     # Smoothing Function
+    if (smooth == T){
     s.2 <- as.numeric(filter(s, rep(1/11,11), circular=F, sides=2))
     s.2[1:5] <- s[1:5]
     s.2[(length(s.2)-5):length(s.2)] <- s[(length(s)-5):length(s)]
@@ -81,6 +83,16 @@ growth.modGomp <- function(input=" ", output=" ", intercept.guess=0.1,
     t.trim <- t[which(t <= t.end)]
     s.trim <- s.2[which(t <= t.end)]
     tmpdata <- data.frame(t.trim, s.trim)
+    } else {
+      s.2 <- as.numeric(s)
+      s.2[1:5] <- s[1:5]
+      s.2[(length(s.2)-5):length(s.2)] <- s[(length(s)-5):length(s)]
+      s.max <- max(which(s.2 == max(s.2, na.rm=T)))
+      t.end <- round(t[s.max],0) + 1
+      t.trim <- t[which(t <= t.end)]
+      s.trim <- s.2[which(t <= t.end)]
+      tmpdata <- data.frame(t.trim, s.trim)
+    }
 
     # Set Grid and Start Lists for Model
     # Modified Gompertz, dat~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z))
