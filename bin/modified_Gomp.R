@@ -6,13 +6,15 @@
 ################################################################################
 #                                                                              #
 #	Written by: M. Muscarella                                                    #
-#   Based on growthcurve_code.R Written by: M. Larsen (2013/07/18)             #
+#   Partially based on growthcurve_code.R Written by: M. Larsen (2013/07/18)   #
 #                                                                              #
 #	Last update: 02/27/2016 by V. Kuo and M. Muscarella                          #
 #                                                                              #
 ################################################################################
 
-growth.modGomp <- function(input=" ", output=" ", 
+growth.modGomp <- function(input=" ", output.name=" ", 
+                           output.dir="../output/",
+                           temp.dir="../temp/",
                            intercept.guess=0.1,delta = 0.05,
                            synergy=T, temp = T, smooth = T, skip = ""){
     # Input = Raw txt output file from Synergy MX
@@ -26,6 +28,11 @@ growth.modGomp <- function(input=" ", output=" ",
   source("../bin/read.synergy.R")
   source("../bin/curve_fit_fxs.R")
   source("../bin/grid.mle2.R")
+  
+  # Create Directory For Output and Temp
+  dir.create(output.dir, showWarnings = FALSE)
+  dir.create(temp.dir, showWarnings = FALSE)
+  
 
   # Data Input
   if (synergy == T){
@@ -49,9 +56,12 @@ growth.modGomp <- function(input=" ", output=" ",
   colnames(results) <- c("Curve","b0","A","umax","L","z",
     "umax.lw","umax.up","umax.lw.FI","umax.up.FI")
   results <- as.data.frame(results)
+  
+  # Temporary Directory
+  # outfile <- paste(temp.dir,output,".txt", sep="")
 
-  # Creat Output
-  outfile <- paste("../output/",output,".txt", sep="")
+  # Creat Output Directory
+  outfile <- paste(output.dir,output.name,".txt", sep="")
   titles <- c("Curve","b0","A","umax","L","z", "umax.lw","umax.up",
               "umax.lw.FI","umax.up.FI")
   write.table(as.matrix(t(titles)), file=outfile, append=F, row.names=F,
@@ -111,7 +121,7 @@ growth.modGomp <- function(input=" ", output=" ",
 	  # generate plot of model fits
     plot(s ~ t, main=samples[i], ylab="ABS", xlab="Time", pch=19, data=realdata)
     curve(m.gomp(x,coef(best.f1)[1:4]),0,max(realdata$t),col='blue',lwd=2,add=T)
-    pdf(file=paste("../output/testplot",samples[i],".pdf",sep=""))
+    pdf(file=paste(temp.dir,"testplot",samples[i],".pdf",sep=""))
     par(mar = c(6, 6, 4, 2))
     plot(s ~ t, main=samples[i], 
          ylab=expression(paste("Absorbance"[600])), 
