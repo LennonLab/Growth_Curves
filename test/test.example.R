@@ -28,6 +28,7 @@ growth.modGomp("../test/125_1_6_GrowthCurves.txt", "BehriTest", skip = 38)
 
 # Run Example (CSV file)
 growth.modGomp("../data/ControlRpf.csv", "csv_test", synergy=F, temp=F)
+growth.modGomp("../data/Pseudo.csv", "csv_test", synergy=F, temp=F, smooth=F)
 
 # Run Example (CSV file) w/o Smoothing
 growth.modGomp("../data/ControlRpf.csv", "csv_test", synergy=F, temp=F, smooth=F)
