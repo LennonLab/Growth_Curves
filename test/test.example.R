@@ -31,5 +31,6 @@ growth.modGomp("../data/GrowthCurve_Example2.txt", "test", skip=48)
 growth.modGomp("../data/RPF.txt", "RPF", skip = 39)
 growth.modGomp("../test/125_1_6_GrowthCurves.txt", "BehriTest", skip = 38)
 
-# Run Example (CSV file) w/o Smoothing
-growth.modGomp("../data/Brentgrowthcurve2.csv", "csv_test", synergy=F, temp=F, smooth=F)
+# Run Example (CSV file)
+growth.modGomp("../data/ControlRpf.csv", "csv_test", synergy=F, temp=F)
+growth.modGomp("../data/Pseudo.csv", "csv_test", synergy=F, temp=F, smooth=F)
