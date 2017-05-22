@@ -19,7 +19,7 @@
 # Modified Gompertz Equation
 m.gomp<-function(t,pars){
 	b0<-pars[1]
-	A<-pars[2]
+	A<-abs(pars[2])
 	umax<-pars[3]
 	L<-pars[4]
 	b0+A*exp(-exp(umax*exp(1)*(L-t)/A+1))
@@ -51,7 +51,7 @@ confint.FI<-function(model){
 	lw<-cfs-1.96*ses
 	up<-cfs+1.96*ses
 	res<-cbind(lw,up)
-	dimnames(res)<-list(names(cfs),c("2.5 %","97.5 %"))	
+	dimnames(res)<-list(names(cfs),c("2.5 %","97.5 %"))
 	res
   }
 
