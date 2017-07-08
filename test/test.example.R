@@ -21,7 +21,7 @@ source("../bin/modified_Gomp.R")
 # CSV file must have the following format: Header followed by whole or decimal numbers 
 # Time  A1  A2  A3  ...
 # 30    0.2 0.1 0.4 ...
-growth.modGomp("../data/Brentgrowthcurve.csv", "csv_test", synergy=F, temp=F)
+growth.modGomp("../data/Brentgrowthcurve.csv", "csv_test", synergy=F, temp=F, smooth =T)
 
 growth.modGomp("../data/20170305_GeneralityRpf.csv", "csv_test", synergy=F, temp=F)
 

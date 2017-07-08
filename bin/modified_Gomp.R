@@ -106,7 +106,7 @@ growth.modGomp <- function(input=" ", output.name=" ",
 
     # Set Grid and Start Lists for Model
     # Modified Gompertz, dat~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z))
-    grids1<-list(umax=c(0.05,0.1,1),L=c(-5,-0.5,0.1,5,10,20),z=c(-2,-0.5))
+    grids1<-list(A=c(0.01, 0.1, 0.5),umax=c(0.05,0.1,1),L=c(-5,-0.5,0.1,5,10,20),z=c(-2,-0.5))
     start1<-list(b0=intercept.guess,A=max(tmpdata[,2]),umax=NA,L=NA,z=NA)
 
     # Perform grid.mle2 Fits
