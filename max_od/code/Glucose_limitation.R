@@ -4,11 +4,20 @@ library("growthcurver")
 library('pracma')
 library(tidyverse)
 
+
 setwd("C:/Users/danschw/GitHub/Growth_Curves/max_od/")
 
 d1 <- read.csv("./data/BDM_limit.csv")
 d2 <- read.csv("./data/BDM_limit2.csv")
 d.wells <-  read.csv("./data/BDM_well_guide.csv")
+
+setwd("C:/Users/danschw/Documents/Github/Growth_Curves/growthcurver/")
+# source('find_peaks.r')
+
+d1 <- read.csv("../data/BDM_limit.csv")
+d2 <- read.csv("../data/BDM_limit2.csv")
+d.wells <-  read.csv("../data/BDM_well_guide.csv")
+
 d.wells$row <- gsub("\\d","",d.wells$Well)
 d.wells$col <-gsub("\\D","",d.wells$Well)
 
@@ -159,7 +168,9 @@ for (i in 1:nrow(d.wells)) {
 }
 
 
+
 pdf("./fig/plots.pdf")
+
 for (i in 1:nrow(d.wells)){
   well <- as.character(d.wells$Well[i])
   if (d.wells$exp[i]==1){
@@ -182,7 +193,9 @@ for (i in 1:nrow(d.wells)){
 }
 dev.off()
 
+
 p <- 
+
 ggplot(filter(d.wells, Gluc_mM>0, as.numeric(k)<5 ), aes(x=Gluc_mM, y=as.numeric(k)))+
   # geom_vline(xintercept = 2.73, color="red")+# Dawes chemostat conc. of Glucose
   # geom_errorbar(aes(ymin=k-k_se, ymax=k+k_se, color=rep), width=.1) +
@@ -192,7 +205,11 @@ ggplot(filter(d.wells, Gluc_mM>0, as.numeric(k)<5 ), aes(x=Gluc_mM, y=as.numeric
   scale_color_brewer(name="Glucose (mM)",palette =  "Paired")+
   ggtitle("Glucose limitation in defined media")+
   theme_bw()
+
 ggsave("./fig/growthvurver_yield.pdf",p)
+
+
+
 #The growthcurver isn't doing a good job!!!
 #I will stick to the maxOD!
 
@@ -212,6 +229,7 @@ fit <- mle2(d.wells$maxOD ~ dnorm(mean = v * d.wells$Gluc_mM /
             data = d.wells)
 
 # Plot Data
+
 png(filename="./fig/GlucMM.png",
     width = 1200, height = 1200, res = 96*2)
 
