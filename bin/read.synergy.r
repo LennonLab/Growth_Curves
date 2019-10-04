@@ -25,4 +25,3 @@ read.synergy <- function(input = " ", skip = ""){
     if (is.numeric(data.out[,i]) == FALSE){data.out[,i] = as.numeric(data.out[,i])}}
   return(data.out)
   }
-
