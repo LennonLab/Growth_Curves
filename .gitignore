@@ -1,5 +1,5 @@
 plot.out/
-output/
+output/*
 input/
 temp/
 .DS_Store

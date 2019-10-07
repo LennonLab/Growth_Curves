@@ -13,6 +13,8 @@ The code uses grid searching maximum likelihood estimation to fit the model.
 2. Use `test.example.R` as a template for your analysis
 3. Proceed with analysis
 
+*Please do not save your own data to this repo*
+
 ## Repo Contents
 
 **bin**
