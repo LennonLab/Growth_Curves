@@ -74,7 +74,7 @@ growth.modGomp <- function(input = " ", output.name = " ", skip = "",
               col.names=F, sep=",", quote=FALSE)
   
   # Initialize Plotting Device
-  outplot <- paste(output.dir, paste(output.dir,output.name, ".pdf", sep=""), sep ="/")
+  outplot <- paste(output.dir, paste(output.name, ".pdf", sep=""), sep ="/")
   pdf(file = outplot, width = 6, height = 4)
 
   for(i in 1:length(samples)){
@@ -103,8 +103,8 @@ growth.modGomp <- function(input = " ", output.name = " ", skip = "",
       s.1 <- realdata$s
       t.1 <- realdata$t
       s.2 <- as.numeric(stats::filter(s.1, rep(1/11,11), circular=F, sides=2))
-      s.2[1] <- s.1[1]
-      s.2[length(s.2)] <- s.1[length(s.1)]
+      s.2[1:5] <- s.1[1:5]
+      s.2[(length(s.2) - 5):length(s.2)] <- s.1[(length(s.1) - 5):length(s.1)]
       # s.max <- max(which(s.2 == max(s.2, na.rm=T)))
       # t.end <- round(t[s.max],0) + 1
       # t.trim <- t[which(t <= t.end)]
@@ -165,11 +165,12 @@ growth.modGomp <- function(input = " ", output.name = " ", skip = "",
 
     # Set Grid and Start Lists for Model
     # Modified Gompertz, dat~dnorm(mean=m.gomp(time2,c(b0,A,umax,L)),sd=exp(z))
-    grids1<-list(A=c(0.8 * max(tmpdata[,2]), max(tmpdata[,2]), 1.2 * max(tmpdata[,2])),
+    grids1<-list(A=c(0.8 * max(na.omit(tmpdata[,2])), max(na.omit(tmpdata[,2])), 
+                     1.2 * max(na.omit(tmpdata[,2]))),
                  umax=c(0.05, 0.1, 1, 2),
                  L=c(1, 25, 50, 100),
                  z=c(-0.5, -0.05, -0.005))
-    start1<-list(b0=intercept.guess,A=max(tmpdata[,2]),umax=0,L=0,z=0)
+    start1<-list(b0=intercept.guess,A=max(na.omit(tmpdata[,2])),umax=(2 * delta),L=0,z=-0.01)
 
     # Perform grid.mle2 Fits
     fit1<-grid.mle2(minuslogl=s~dnorm(mean=m.gomp(t,c(b0,A,umax,L)),
@@ -220,12 +221,12 @@ growth.modGomp <- function(input = " ", output.name = " ", skip = "",
     print("finished pf1", quote=F)
 
     if(class(pf1)=="profile.mle2"){
-    ci1<-confint(pf1)['umax',]
+    ci1<-suppressWarnings(confint(pf1)['umax',])
   	} else {
       ci1<-c(NA,NA)
 		  names(ci1)<-c("2.5%","97.5%")
       }
-    ciFI1<-confint.FI(best.f1)['umax',]
+    ciFI1<-suppressWarnings(confint.FI(best.f1)['umax',])
 
     # Save coefficients of model
     cfs<-coef(best.f1)
@@ -249,7 +250,9 @@ growth.modGomp <- function(input = " ", output.name = " ", skip = "",
   # results1<-results
   # write.csv(results,"results.csv")
   dev.off()
+  graphics.off()
   return(results)
+  
 }
 
 
